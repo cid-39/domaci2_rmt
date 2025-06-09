@@ -15,6 +15,19 @@ public class User {
 	public User() {
 		super();
 	}
+	public User(int id, String username, String password, String ime, String prezime, String email, String jmbg,
+			String broj_pasosa, LocalDate datum_rodjenja) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.ime = ime;
+		this.prezime = prezime;
+		this.email = email;
+		this.jmbg = jmbg;
+		this.broj_pasosa = broj_pasosa;
+		this.datum_rodjenja = datum_rodjenja;
+	}
 	public LocalDate getDatum_rodjenja() {
 		return datum_rodjenja;
 	}

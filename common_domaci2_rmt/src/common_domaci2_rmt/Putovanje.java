@@ -86,6 +86,6 @@ public class Putovanje {
 
 	private boolean validacijaPutovanja(User putnik, LinkedList<Zemlja> zemlje, LocalDate datum_prijave, LocalDate datum_ulaska,
 			LocalDate datum_izlaska, Transport transport, boolean placa_se) {
-		return false; // To be implemented
+		return true; // To be implemented
 	}
 }
