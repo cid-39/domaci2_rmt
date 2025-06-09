@@ -10,10 +10,10 @@ public class Putovanje {
 	private LocalDate datum_prijave;
 	private LocalDate datum_ulaska;
 	private LocalDate datum_izlaska;
-	private TransportType transport;
+	private Transport transport;
 	private boolean placa_se;
 	public Putovanje(User putnik, LinkedList<Zemlja> zemlja, LocalDate datum_prijave, LocalDate datum_ulaska,
-			LocalDate datum_izlaska, TransportType transport, boolean placa_se) {
+			LocalDate datum_izlaska, Transport transport, boolean placa_se) {
 		if (!validacijaPutovanja(putnik, zemlja, datum_prijave, datum_ulaska, datum_izlaska, transport, placa_se))
 			throw new RuntimeException("Invalid trip info");
 		
@@ -47,7 +47,7 @@ public class Putovanje {
 	public LocalDate getDatum_izlaska() {
 		return datum_izlaska;
 	}
-	public TransportType getTransport() {
+	public Transport getTransport() {
 		return transport;
 	}
 	public boolean isPlaca_se() {
@@ -76,7 +76,7 @@ public class Putovanje {
 		this.datum_izlaska = datum_izlaska;
 	}
 
-	public void setTransport(TransportType transport) {
+	public void setTransport(Transport transport) {
 		this.transport = transport;
 	}
 
@@ -85,7 +85,7 @@ public class Putovanje {
 	}
 
 	private boolean validacijaPutovanja(User putnik, LinkedList<Zemlja> zemlje, LocalDate datum_prijave, LocalDate datum_ulaska,
-			LocalDate datum_izlaska, TransportType transport, boolean placa_se) {
+			LocalDate datum_izlaska, Transport transport, boolean placa_se) {
 		return false; // To be implemented
 	}
 }
