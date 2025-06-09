@@ -103,19 +103,19 @@ DROP TABLE IF EXISTS `Putovanje`;
 /*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Putovanje` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `putnik_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
   `zemlja_id` bigint(20) NOT NULL,
   `datum_prijave` date NOT NULL,
   `datum_ulaska` date NOT NULL,
   `datum_izlaska` date NOT NULL,
   `transport_id` bigint(20) NOT NULL,
   `placa_se` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`,`putnik_id`),
+  PRIMARY KEY (`id`,`user_id`,`zemlja_id`),
   KEY `Putovanje_Transport_FK` (`transport_id`),
+  KEY `Putovanje_User_FK` (`user_id`),
   KEY `Putovanje_Zemlja_FK` (`zemlja_id`),
-  KEY `Putovanje_User_FK` (`putnik_id`),
   CONSTRAINT `Putovanje_Transport_FK` FOREIGN KEY (`transport_id`) REFERENCES `Transport` (`id`),
-  CONSTRAINT `Putovanje_User_FK` FOREIGN KEY (`putnik_id`) REFERENCES `User` (`id`),
+  CONSTRAINT `Putovanje_User_FK` FOREIGN KEY (`user_id`) REFERENCES `User` (`id`),
   CONSTRAINT `Putovanje_Zemlja_FK` FOREIGN KEY (`zemlja_id`) REFERENCES `Zemlja` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -176,7 +176,7 @@ CREATE TABLE `User` (
   `broj_pasosa` varchar(9) NOT NULL,
   `datum_rodjenja` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -185,6 +185,8 @@ CREATE TABLE `User` (
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
+INSERT INTO `User` VALUES
+(1,'tester','tester','test','testerovic','test@gmail.com','1234567890123','123456789','1900-01-01');
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -230,4 +232,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-06-09 13:03:22
+-- Dump completed on 2025-06-09 15:32:17
