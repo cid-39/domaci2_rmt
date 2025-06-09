@@ -6,19 +6,19 @@ import java.util.LinkedList;
 public class Putovanje {
 	private int id;
 	private User putnik;
-	private LinkedList<CountryEU> zemlja;
+	private LinkedList<Zemlja> zemlje;
 	private LocalDate datum_prijave;
 	private LocalDate datum_ulaska;
 	private LocalDate datum_izlaska;
 	private TransportType transport;
 	private boolean placa_se;
-	public Putovanje(User putnik, LinkedList<CountryEU> zemlja, LocalDate datum_prijave, LocalDate datum_ulaska,
+	public Putovanje(User putnik, LinkedList<Zemlja> zemlja, LocalDate datum_prijave, LocalDate datum_ulaska,
 			LocalDate datum_izlaska, TransportType transport, boolean placa_se) {
 		if (!validacijaPutovanja(putnik, zemlja, datum_prijave, datum_ulaska, datum_izlaska, transport, placa_se))
 			throw new RuntimeException("Invalid trip info");
 		
 		this.putnik = putnik;
-		this.zemlja = zemlja;
+		this.zemlje = zemlja;
 		this.datum_prijave = datum_prijave;
 		this.datum_ulaska = datum_ulaska;
 		this.datum_izlaska = datum_izlaska;
@@ -35,8 +35,8 @@ public class Putovanje {
 	public User getPutnik() {
 		return putnik;
 	}
-	public LinkedList<CountryEU> getZemlja() {
-		return zemlja;
+	public LinkedList<Zemlja> getZemlja() {
+		return zemlje;
 	}
 	public LocalDate getDatum_prijave() {
 		return datum_prijave;
@@ -60,8 +60,8 @@ public class Putovanje {
 		this.putnik = putnik;
 	}
 
-	public void setZemlja(LinkedList<CountryEU> zemlja) {
-		this.zemlja = zemlja;
+	public void setZemlja(LinkedList<Zemlja> zemlja) {
+		this.zemlje = zemlja;
 	}
 
 	public void setDatum_prijave(LocalDate datum_prijave) {
@@ -84,7 +84,7 @@ public class Putovanje {
 		this.placa_se = placa_se;
 	}
 
-	private boolean validacijaPutovanja(User putnik, LinkedList<CountryEU> zemlja, LocalDate datum_prijave, LocalDate datum_ulaska,
+	private boolean validacijaPutovanja(User putnik, LinkedList<Zemlja> zemlje, LocalDate datum_prijave, LocalDate datum_ulaska,
 			LocalDate datum_izlaska, TransportType transport, boolean placa_se) {
 		return false; // To be implemented
 	}
