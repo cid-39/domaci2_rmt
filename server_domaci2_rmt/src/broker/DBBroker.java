@@ -102,7 +102,7 @@ public class DBBroker {
     		
     		connection.commit();
         } catch (SQLException e) {
-            System.out.println("DBBroker: error in getUser");
+            System.out.println("DBBroker: error in insertPutovanje");
             e.printStackTrace();
             try {
 				connection.rollback();
