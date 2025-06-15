@@ -65,6 +65,63 @@ public class DBBroker {
 		return null;
     }
     
+    public User getUser (String jmbg) {
+    	try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM User WHERE jmbg = "+jmbg);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) { 
+            	return new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"), rs.getString("ime"), rs.getString("prezime"), rs.getString("email"), rs.getString("jmbg"), rs.getString("broj_pasosa"), rs.getDate("datum_rodjenja").toLocalDate());        
+            }
+        } catch (SQLException e) {
+            System.out.println("DBBroker: error in getUser");
+            e.printStackTrace();
+        }
+		return null;
+    }
+    
+    public User getPerson (String jmbg) {
+    	try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM Population WHERE jmbg = "+jmbg);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) { 
+            	return new User(0, "", "", rs.getString("ime"), rs.getString("prezime"), "", rs.getString("jmbg"), rs.getString("broj_pasosa"), rs.getDate("datum_rodjenja").toLocalDate());        
+            }
+        } catch (SQLException e) {
+            System.out.println("DBBroker: error in getUser");
+            e.printStackTrace();
+        }
+		return null;
+    }
+    
+    public void insertUser(User user) {
+    	try {
+    		PreparedStatement statement = connection.prepareStatement("INSERT INTO User (username, password, ime, prezime, email, jmbg, broj_pasosa, datum_rodjenja) VALUES (?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+			statement.setString(1, user.getUsername());
+			statement.setString(2, user.getPassword());
+			statement.setString(3, user.getIme());
+			statement.setString(4, user.getPrezime());
+			statement.setString(5, user.getEmail());
+			statement.setString(6, user.getJmbg());
+			statement.setString(7, user.getBroj_pasosa());
+			statement.setDate(8, Date.valueOf(user.getDatum_rodjenja()));
+			statement.executeUpdate();				
+			ResultSet rsId = statement.getGeneratedKeys();
+			if (rsId.next()) {
+                user.setId(rsId.getInt(1));
+            }
+    		connection.commit();
+        } catch (SQLException e) {
+            System.out.println("DBBroker: error in insertUser");
+            e.printStackTrace();
+            try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        }
+    }
+    
     public void insertPutovanje(Putovanje putovanje) {
     	try {
     		LinkedList<Integer> zemlje = new LinkedList<Integer>();
@@ -112,4 +169,5 @@ public class DBBroker {
 			}
         }
     }
+    
 }

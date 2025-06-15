@@ -1,6 +1,7 @@
 package common_domaci2_rmt;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class User {
 	private int id;
@@ -90,7 +91,7 @@ public class User {
 		return jmbg;
 	}
 	public void setJmbg(String jmbg) {
-		if (jmbg == null || jmbg.length() != 13 || isAllDigits(jmbg))
+		if (jmbg == null || jmbg.length() != 13 || !isAllDigits(jmbg))
 			throw new RuntimeException("jmbg has to be exactly 13 digits");
 		this.jmbg = jmbg;
 	}
@@ -109,5 +110,22 @@ public class User {
 				return false;
 		}
 		return true;
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(broj_pasosa, datum_rodjenja, ime, jmbg, prezime);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		return Objects.equals(broj_pasosa, other.broj_pasosa) && Objects.equals(datum_rodjenja, other.datum_rodjenja)
+				&& Objects.equals(ime, other.ime) && Objects.equals(jmbg, other.jmbg)
+				&& Objects.equals(prezime, other.prezime);
 	}
 }
