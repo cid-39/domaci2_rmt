@@ -24,6 +24,7 @@ public class DBBroker {
 	
 	private Connection connection;
     
+	
     public void connect() throws SQLException{
         try {
             String url = "jdbc:mysql://localhost:3306/domaci2RMT";
@@ -202,8 +203,27 @@ public class DBBroker {
         }
 		return retList;
     }
-
-    public Zemlja getZemlja(int id) {
+    
+    public void updatePutovanje(Putovanje putovanje) {
+    	try {
+    		// can't be bothered :)
+    		removePutovanje(putovanje.getId());
+    		insertPutovanje(putovanje);
+    		connection.commit();
+    		// yes, putovanje id will change, no, im not fixing it
+        } catch (SQLException e) {
+            System.out.println("DBBroker: error in updatePutovanje");
+            e.printStackTrace();
+            try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        }
+    }
+    
+   private Zemlja getZemlja(int id) {
     	try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM Zemlja WHERE id = "+id);
             ResultSet rs = statement.executeQuery();
@@ -217,7 +237,7 @@ public class DBBroker {
 		return null;
     }
     
-    public Transport getTransport(int id) {
+    private Transport getTransport(int id) {
     	try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM Transport WHERE id = "+id);
             ResultSet rs = statement.executeQuery();
@@ -229,5 +249,44 @@ public class DBBroker {
             e.printStackTrace();
         }
 		return null;
+    }
+    
+    public Putovanje getPutovanje(int id) {
+    	Putovanje putovanje=new Putovanje(null, null, null, null, null, null, false);
+    	try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM Putovanje WHERE id = "+id);
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+            	User putnik = getUser(rs.getInt("user_id"));
+            	Transport transport = getTransport(rs.getInt("transport_id"));
+            	LinkedList<Zemlja> zemlje = new LinkedList<Zemlja>();
+            	zemlje.add(getZemlja(rs.getInt("zemlja_id")));
+
+            	putovanje = new Putovanje(putnik, zemlje, rs.getDate("datum_prijave").toLocalDate(), rs.getDate("datum_ulaska").toLocalDate(), rs.getDate("datum_izlaska").toLocalDate(), transport, rs.getBoolean("placa_se"));
+            	putovanje.setId(rs.getInt("id"));
+            }
+            while (rs.next()) {
+            	LinkedList<Zemlja> zemlje = putovanje.getZemlja();
+            	zemlje.add(getZemlja(rs.getInt("zemlja_id")));
+            	putovanje.setZemlja(zemlje);
+            }
+        } catch (SQLException e) {
+            System.out.println("DBBroker: error in getPutovanja");
+            e.printStackTrace();
+        }
+		return putovanje;
+    }
+
+    private int removePutovanje(int id) {
+    	try {
+    		 PreparedStatement statement = connection.prepareStatement("DELETE FROM Putovanje WHERE id="+id);
+             int affectedrows = statement.executeUpdate();
+             return affectedrows;
+        } catch (SQLException e) {
+            System.out.println("DBBroker: error in removePutovanje");
+            e.printStackTrace();
+        }
+    	return 0;
     }
 }

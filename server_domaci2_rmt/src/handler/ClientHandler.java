@@ -25,13 +25,15 @@ public class ClientHandler {
 		}
 		
 		
-//		User u = broker.getUser(5);
-//		Zemlja F = new Zemlja(1, "FRANCE");
-//		Zemlja G = new Zemlja(2, "GERMANY");
-//		LinkedList<Zemlja> Z = new LinkedList<Zemlja>();
-//		Z.add(G); Z.add(F);
-//		Putovanje p = new Putovanje(u, Z, LocalDate.now(), LocalDate.now().plusDays(10), LocalDate.now().plusDays(20), new Transport(1, "CAR"), true);
-//		
+		User u = broker.getUser(5);
+		Zemlja F = new Zemlja(1, "FRANCE");
+		Zemlja G = new Zemlja(2, "GERMANY");
+		LinkedList<Zemlja> Z = new LinkedList<Zemlja>();
+		Z.add(G); Z.add(F);
+		Putovanje p = new Putovanje(u, Z, LocalDate.now(), LocalDate.now().plusDays(100), LocalDate.now().plusDays(100), new Transport(1, "BUS"), false);
+		p.setId(7);
+		broker.updatePutovanje(p);
+		
 //		broker.insertPutovanje(p);
 		
 		
