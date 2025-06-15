@@ -23,7 +23,8 @@ public class ClientHandler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
+		
 //		User u = broker.getUser(5);
 //		Zemlja F = new Zemlja(1, "FRANCE");
 //		Zemlja G = new Zemlja(2, "GERMANY");
@@ -32,8 +33,33 @@ public class ClientHandler {
 //		Putovanje p = new Putovanje(u, Z, LocalDate.now(), LocalDate.now().plusDays(10), LocalDate.now().plusDays(20), new Transport(1, "CAR"), true);
 //		
 //		broker.insertPutovanje(p);
-
+		
+		
 //		registerUser("asd", "asdasdasd", "test", "testerovic", "kitan@gmail.com", "1111111111111", "111111111", Date.valueOf("1900-01-01").toLocalDate());  
+		
+//		for (Putovanje p : broker.getPutovanja(5)) {
+//	        System.out.println("Putovanje ID: " + p.getId());
+//
+//	        User u = p.getPutnik();
+//	        System.out.println("  User: ID=" + u.getId() + ", Username=" + u.getUsername());
+//
+//	        Transport t = p.getTransport();
+//	        System.out.println("  Transport: ID=" + t.getId() + ", Tip=" + t.getTip());
+//
+//	        System.out.println("  Datum prijave: " + p.getDatum_prijave());
+//	        System.out.println("  Datum ulaska: " + p.getDatum_ulaska());
+//	        System.out.println("  Datum izlaska: " + p.getDatum_izlaska());
+//
+//	        System.out.println("  Plaća se: " + (p.isPlaca_se() ? "Da" : "Ne"));
+//
+//	        System.out.println("  Zemlje:");
+//	        for (Zemlja z : p.getZemlja()) {
+//	            System.out.println("    Zemlja ID: " + z.getId() + ", Naziv: " + z.getNaziv());
+//	        }
+//
+//	        System.out.println("-------------------------------");
+//	    }
+		
 		try {
 			broker.disconnect();
 		} catch (SQLException e) {
