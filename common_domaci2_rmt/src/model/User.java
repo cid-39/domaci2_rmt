@@ -1,4 +1,4 @@
-package common_domaci2_rmt;
+package model;
 
 import java.time.LocalDate;
 import java.util.Objects;

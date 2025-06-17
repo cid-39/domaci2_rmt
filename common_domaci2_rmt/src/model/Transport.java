@@ -1,4 +1,4 @@
-package common_domaci2_rmt;
+package model;
 
 public class Transport {
 	private int id;

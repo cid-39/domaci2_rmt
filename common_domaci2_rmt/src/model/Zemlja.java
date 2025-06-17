@@ -1,4 +1,4 @@
-package common_domaci2_rmt;
+package model;
 
 public class Zemlja {
 	private int id;
