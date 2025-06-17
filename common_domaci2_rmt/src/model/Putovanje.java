@@ -1,9 +1,10 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.LinkedList;
 
-public class Putovanje {
+public class Putovanje implements Serializable {
 	private int id;
 	private User putnik;
 	private LinkedList<Zemlja> zemlje;

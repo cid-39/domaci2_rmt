@@ -1,6 +1,8 @@
 package communication;
 
-public class Request {
+import java.io.Serializable;
+
+public class Request implements Serializable {
 	private Operation op;
 	private Object arg;
 	public Operation getOp() {

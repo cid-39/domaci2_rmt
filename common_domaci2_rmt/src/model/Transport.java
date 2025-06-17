@@ -1,6 +1,8 @@
 package model;
 
-public class Transport {
+import java.io.Serializable;
+
+public class Transport implements Serializable {
 	private int id;
 	private String tip;
 	public Transport(int id, String tip) {

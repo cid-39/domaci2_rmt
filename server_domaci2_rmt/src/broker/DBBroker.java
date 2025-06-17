@@ -9,10 +9,11 @@ import java.sql.Statement;
 import java.sql.Date;
 import java.util.LinkedList;
 
-import common_domaci2_rmt.Putovanje;
-import common_domaci2_rmt.Transport;
-import common_domaci2_rmt.User;
-import common_domaci2_rmt.Zemlja;
+import model.Putovanje;
+import model.Transport;
+import model.User;
+import model.Zemlja;
+
 
 
 public class DBBroker {
@@ -65,6 +66,22 @@ public class DBBroker {
             e.printStackTrace();
         }
 		return null;
+    }
+    
+    public boolean loginUser(String username, String pass) {
+    	try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM User WHERE username = ? AND password = ?");
+            statement.setString(1, username);
+            statement.setString(2, pass);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) { 
+            	return true;
+            }
+        } catch (SQLException e) {
+            System.out.println("DBBroker: error in loginUser");
+            e.printStackTrace();
+        }
+		return false;
     }
     
     public User getUser (String jmbg) {

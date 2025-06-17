@@ -5,11 +5,24 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import communication.Operation;
+import communication.Request;
+import communication.Response;
+import communication.Transceiver;
+import model.User;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.awt.event.ActionEvent;
 
 public class WelcomeFrame extends JFrame {
 
@@ -18,6 +31,7 @@ public class WelcomeFrame extends JFrame {
 	private JTextField usernameTextField;
 	private JPasswordField passwordField;
 
+	Transceiver trans = new Transceiver(null);
 	/**
 	 * Launch the application.
 	 */
@@ -38,6 +52,18 @@ public class WelcomeFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public WelcomeFrame() {
+		try {
+			trans = new Transceiver(new Socket("localhost",9000));
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
 		setResizable(false);
 		setTitle("Putovanja");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,6 +90,28 @@ public class WelcomeFrame extends JFrame {
 		usernameTextField.setColumns(10);
 		
 		JButton btnLogIn = new JButton("Login");
+		btnLogIn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String username = usernameTextField.getText();
+				String password = passwordField.getText();
+				User u = new User();
+				u.setUsername(username);
+				u.setPassword(password);
+				try {
+					trans.marco(new Request(Operation.LOGIN, u));
+					
+					Response res = (Response) trans.polo();
+					if (((Boolean) res.getData()).booleanValue()) {
+						JOptionPane.showMessageDialog(getParent(), "Welcome "+u.getUsername());
+					}
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+			}
+		});
 		btnLogIn.setBounds(171, 85, 99, 27);
 		contentPane.add(btnLogIn);
 		

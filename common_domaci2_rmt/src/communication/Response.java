@@ -1,6 +1,8 @@
 package communication;
 
-public class Response {
+import java.io.Serializable;
+
+public class Response implements Serializable {
 	private Object data;
 	private Exception exception;
 	public Response(Object data, Exception exception) {

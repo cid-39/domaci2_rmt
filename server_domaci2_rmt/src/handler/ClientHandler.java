@@ -1,17 +1,19 @@
 package handler;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.LinkedList;
 
 import broker.DBBroker;
+import communication.Operation;
+import communication.Request;
+import communication.Response;
+import communication.Transceiver;
+import model.User;
 
-import common_domaci2_rmt.Putovanje;
-import common_domaci2_rmt.Transport;
-import common_domaci2_rmt.User;
-import common_domaci2_rmt.Zemlja;
-import common_domaci2_rmt.Putovanje;
 
 public class ClientHandler {
 	private static DBBroker broker;
@@ -24,43 +26,33 @@ public class ClientHandler {
 			e.printStackTrace();
 		}
 		
-		
-		User u = broker.getUser(5);
-		Zemlja F = new Zemlja(1, "FRANCE");
-		Zemlja G = new Zemlja(2, "GERMANY");
-		LinkedList<Zemlja> Z = new LinkedList<Zemlja>();
-		Z.add(G); Z.add(F);
-		Putovanje p = new Putovanje(u, Z, LocalDate.now(), LocalDate.now().plusDays(100), LocalDate.now().plusDays(100), new Transport(1, "BUS"), false);
-		p.setId(7);
-		broker.updatePutovanje(p);
-		
-//		broker.insertPutovanje(p);
-		
-		
-//		registerUser("asd", "asdasdasd", "test", "testerovic", "kitan@gmail.com", "1111111111111", "111111111", Date.valueOf("1900-01-01").toLocalDate());  
-		
-//		for (Putovanje p : broker.getPutovanja(5)) {
-//	        System.out.println("Putovanje ID: " + p.getId());
-//
-//	        User u = p.getPutnik();
-//	        System.out.println("  User: ID=" + u.getId() + ", Username=" + u.getUsername());
-//
-//	        Transport t = p.getTransport();
-//	        System.out.println("  Transport: ID=" + t.getId() + ", Tip=" + t.getTip());
-//
-//	        System.out.println("  Datum prijave: " + p.getDatum_prijave());
-//	        System.out.println("  Datum ulaska: " + p.getDatum_ulaska());
-//	        System.out.println("  Datum izlaska: " + p.getDatum_izlaska());
-//
-//	        System.out.println("  Plaća se: " + (p.isPlaca_se() ? "Da" : "Ne"));
-//
-//	        System.out.println("  Zemlje:");
-//	        for (Zemlja z : p.getZemlja()) {
-//	            System.out.println("    Zemlja ID: " + z.getId() + ", Naziv: " + z.getNaziv());
-//	        }
-//
-//	        System.out.println("-------------------------------");
-//	    }
+		int a = 0;
+		ServerSocket socket;
+		Transceiver trans = new Transceiver(null);
+		try {
+			socket = new ServerSocket(9000);
+			trans = new Transceiver(socket.accept());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while (a<10) {
+			try {
+				Request req = (Request) trans.polo();
+				if (req.getOp() == Operation.LOGIN) {
+					User user = (User) req.getArg();
+					
+					Response res = new Response(new Boolean(broker.loginUser(user.getUsername(), user.getPassword())), null);
+					trans.marco(res);
+				}
+			
+			} catch (Exception e) {
+				e.printStackTrace();
+				break;
+			}
+			
+			a++;
+		}
 		
 		try {
 			broker.disconnect();

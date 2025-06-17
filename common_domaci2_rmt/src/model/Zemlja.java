@@ -1,6 +1,8 @@
 package model;
 
-public class Zemlja {
+import java.io.Serializable;
+
+public class Zemlja implements Serializable {
 	private int id;
 	private String naziv;
 	public Zemlja(int id, String naziv) {
