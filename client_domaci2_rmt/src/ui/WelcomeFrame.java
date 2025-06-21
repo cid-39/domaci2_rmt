@@ -53,7 +53,7 @@ public class WelcomeFrame extends JFrame {
 	 */
 	public WelcomeFrame() {
 		try {
-			trans = new Transceiver(new Socket("localhost",9000));
+			trans = new Transceiver(new Socket("localhost",9454));
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -98,9 +98,9 @@ public class WelcomeFrame extends JFrame {
 				u.setUsername(username);
 				u.setPassword(password);
 				try {
-					trans.marco(new Request(Operation.LOGIN, u));
+					trans.send(new Request(Operation.LOGIN, u));
 					
-					Response res = (Response) trans.polo();
+					Response res = (Response) trans.recieve();
 					if (((Boolean) res.getData()).booleanValue()) {
 						JOptionPane.showMessageDialog(getParent(), "Welcome "+u.getUsername());
 					}

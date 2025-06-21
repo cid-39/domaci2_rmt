@@ -12,13 +12,13 @@ public class Transceiver {
 		this.sock = sock;
 	}
 	
-	public void marco(Object data) throws Exception {
+	public void send(Object data) throws Exception {
 		ObjectOutputStream out = new ObjectOutputStream(sock.getOutputStream());
 		out.writeObject(data);
 		out.flush();
 	}
 	
-	public Object polo() throws Exception {
+	public Object recieve() throws Exception {
 		ObjectInputStream in = new ObjectInputStream(sock.getInputStream());
 		return in.readObject();
 	}
