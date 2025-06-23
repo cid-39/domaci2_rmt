@@ -74,6 +74,12 @@ public class LoginForm extends JDialog {
 				JButton registerButton = new JButton("Register");
 				registerButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
+						RegisterForm regform = new RegisterForm();
+						regform.setLocationRelativeTo(null);
+						regform.setVisible(true);
+						login_user = regform.getRegistered();
+						regform.dispose();
+						setVisible(false);
 					}
 				});
 				buttonPane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));

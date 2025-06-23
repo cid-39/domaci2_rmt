@@ -3,13 +3,9 @@ package main;
 import java.io.IOException;
 import java.net.Socket;
 
-import javax.security.auth.login.LoginContext;
-import javax.swing.JFrame;
-
 import communication.Transceiver;
 import model.User;
 import ui.LoginForm;
-import ui.WelcomeFrame;
 
 public class Main {
 	public static Transceiver transceiver;

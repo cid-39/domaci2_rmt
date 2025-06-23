@@ -29,4 +29,24 @@ public class Connection {
 		
 		return user;
 	}
+	
+	public static User register(User reg_user) {
+		Request request = new Request(Operation.REGISTER, reg_user);
+		User user;
+		try {
+			Main.transceiver.send(request);
+			Response response = (Response) Main.transceiver.recieve();
+			
+			if (response.getException() != null) {
+				response.getException().printStackTrace();
+				return null;
+			}
+			user = (User) response.getData();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		return user;
+	}
 }
