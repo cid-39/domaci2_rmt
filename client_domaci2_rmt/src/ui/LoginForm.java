@@ -37,7 +37,7 @@ public class LoginForm extends JDialog {
 	 */
 	public LoginForm(JFrame parent) {
 		super(parent, "Login", true);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+//		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		setBounds(100, 100, 292, 163);
 		getContentPane().setLayout(new BorderLayout());
@@ -87,10 +87,9 @@ public class LoginForm extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						String username = textField.getText();
 						String password = passwordField.getText();
-						User login_user = Connection.login(username, password);
-						System.out.println(login_user.getId()+"  "+login_user.getJmbg());
+						login_user = Connection.login(username, password);
 						if (login_user!=null) {
-							JOptionPane.showConfirmDialog(loginButton, "Welcome");
+							JOptionPane.showMessageDialog(loginButton, "Welcome", "Successful login!", JOptionPane.INFORMATION_MESSAGE);
 							setVisible(false);
 						}
 					}

@@ -7,6 +7,7 @@ import javax.security.auth.login.LoginContext;
 import javax.swing.JFrame;
 
 import communication.Transceiver;
+import model.User;
 import ui.LoginForm;
 import ui.WelcomeFrame;
 
@@ -24,7 +25,7 @@ public class Main {
 		LoginForm loginform = new LoginForm(null);
 		loginform.setLocationRelativeTo(null);
 		loginform.setVisible(true);
-		System.out.println(loginform.getLoginUser().getId());
+		User logedUser = loginform.getLoginUser();
 		loginform.dispose();
 		
 		System.out.println("too soon....");
