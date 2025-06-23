@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import client_communication.Connection;
 import communication.Operation;
 import communication.Request;
 import communication.Response;
@@ -24,45 +25,23 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.awt.event.ActionEvent;
 
-public class WelcomeFrame extends JFrame {
+interface LoginListener {
+	void loginSuccess(User user);
+}
 
+public class WelcomeFrame extends JFrame {
+	private LoginListener listener;
+	
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField usernameTextField;
 	private JPasswordField passwordField;
 
-	Transceiver trans = new Transceiver(null);
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					WelcomeFrame frame = new WelcomeFrame();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	/**
 	 * Create the frame.
 	 */
-	public WelcomeFrame() {
-		try {
-			trans = new Transceiver(new Socket("localhost",9454));
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
+	public WelcomeFrame(LoginListener listener) {		
+		this.listener = listener;
 		
 		setResizable(false);
 		setTitle("Putovanja");
@@ -94,22 +73,12 @@ public class WelcomeFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String username = usernameTextField.getText();
 				String password = passwordField.getText();
-				User u = new User();
-				u.setUsername(username);
-				u.setPassword(password);
-				try {
-					trans.send(new Request(Operation.LOGIN, u));
-					
-					Response res = (Response) trans.recieve();
-					if (((Boolean) res.getData()).booleanValue()) {
-						JOptionPane.showMessageDialog(getParent(), "Welcome "+u.getUsername());
-					}
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				User login_user = Connection.login(username, password);
+				if (login_user!=null) {
+					JOptionPane.showConfirmDialog(btnLogIn, "Welcome");
+					listener.loginSuccess(login_user);
+					dispose();
 				}
-				
-				
 			}
 		});
 		btnLogIn.setBounds(171, 85, 99, 27);

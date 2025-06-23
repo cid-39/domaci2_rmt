@@ -68,20 +68,20 @@ public class DBBroker {
 		return null;
     }
     
-    public boolean loginUser(String username, String pass) {
+    public User loginUser(String username, String pass) {
     	try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM User WHERE username = ? AND password = ?");
             statement.setString(1, username);
             statement.setString(2, pass);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) { 
-            	return true;
+            	return new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"), rs.getString("ime"), rs.getString("prezime"), rs.getString("email"), rs.getString("jmbg"), rs.getString("broj_pasosa"), rs.getDate("datum_rodjenja").toLocalDate());       
             }
         } catch (SQLException e) {
             System.out.println("DBBroker: error in loginUser");
             e.printStackTrace();
         }
-		return false;
+		return null;
     }
     
     public User getUser (String jmbg) {
