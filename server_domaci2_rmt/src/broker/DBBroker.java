@@ -253,6 +253,21 @@ public class DBBroker {
         }
 		return null;
     }
+   
+   public Zemlja getZemlja(String naziv) {
+   	try {
+           PreparedStatement statement = connection.prepareStatement("SELECT * FROM Zemlja WHERE naziv = ?");
+           statement.setString(1, naziv);
+           ResultSet rs = statement.executeQuery();
+           if (rs.next()) { 
+           	return new Zemlja(rs.getInt("id"), rs.getString("naziv"));        
+           }
+       } catch (SQLException e) {
+           System.out.println("DBBroker: error in getZemlja");
+           e.printStackTrace();
+       }
+		return null;
+   }
     
     private Transport getTransport(int id) {
     	try {
@@ -260,6 +275,21 @@ public class DBBroker {
             ResultSet rs = statement.executeQuery();
             if (rs.next()) { 
             	return new Transport(id, rs.getString("tip"));        
+            }
+        } catch (SQLException e) {
+            System.out.println("DBBroker: error in getTransport");
+            e.printStackTrace();
+        }
+		return null;
+    }
+    
+    public Transport getTransport(String naziv) {
+    	try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM Transport WHERE tip = ?");
+            statement.setString(1, naziv);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) { 
+            	return new Transport(rs.getInt("id"), rs.getString("tip"));        
             }
         } catch (SQLException e) {
             System.out.println("DBBroker: error in getTransport");

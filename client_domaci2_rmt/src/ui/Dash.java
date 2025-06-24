@@ -7,6 +7,7 @@ import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -19,6 +20,9 @@ import model.Zemlja;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.Dimension;
+import javax.swing.ListSelectionModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Dash extends JDialog {
 
@@ -60,7 +64,10 @@ public class Dash extends JDialog {
 			contentPanel.add(scrollPane);
 			{
 				table = new JTable();
-				table.setEnabled(false);
+				table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				table.setRowSelectionAllowed(true);
+				table.setColumnSelectionAllowed(false);
+				table.setEnabled(true);
 				scrollPane.setViewportView(table);
 			}
 		}
@@ -69,13 +76,51 @@ public class Dash extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				JButton btnNewButton = new JButton("New Putovanje");
+				buttonPane.add(btnNewButton);
+			}
+			{
+				JButton okButton = new JButton("Edit Putovanje");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						int selectedRow = table.getSelectedRow();
+				        if (selectedRow == -1) {
+				            JOptionPane.showMessageDialog(Dash.this, "Please select a row first.");
+				            return;
+				        }
+				        
+				        String status = (String) table.getValueAt(selectedRow, 6);
+				        if (!status.equals("U obradi")) {
+				            JOptionPane.showMessageDialog(Dash.this, "Only 'U obradi' entries can be edited.");
+				            return;
+				        }
+
+
+				        LinkedList<Putovanje> putovanja = Connection.get_putovanja(user.getId());
+				        if (selectedRow >= putovanja.size()) {
+				            JOptionPane.showMessageDialog(Dash.this, "Invalid selection.");
+				            return;
+				        }
+
+				        Putovanje selectedPutovanje = putovanja.get(selectedRow);
+				        PutovanjeEditDialog editDialog = new PutovanjeEditDialog(selectedPutovanje);
+				        editDialog.setLocationRelativeTo(Dash.this);
+				        editDialog.setVisible(true);
+					
+				        loadTable(); // Update table
+					}
+				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("Cancel");
+				JButton cancelButton = new JButton("Exit");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						dispose();
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
@@ -88,7 +133,12 @@ public class Dash extends JDialog {
 		String[] columnNames = {"Zemlje", "Datum prijave", "Datum ulaska", "Datum izlaska", "Nacin transporta", "Placa se", "Status"};
 		Object[][] data = getPutovanjeData();
 
-		DefaultTableModel model = new DefaultTableModel(data, columnNames);
+		DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		table.setModel(model);
 	}
 

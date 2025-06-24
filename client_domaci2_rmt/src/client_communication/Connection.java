@@ -7,7 +7,9 @@ import communication.Request;
 import communication.Response;
 import main.Main;
 import model.Putovanje;
+import model.Transport;
 import model.User;
+import model.Zemlja;
 
 public class Connection {
 	public static User login(String username, String password) {
@@ -73,5 +75,63 @@ public class Connection {
 		}
 		
 		return put;
+	}
+	
+	public static Transport get_transport(String naziv) {
+		Transport ret;
+		Request request = new Request(Operation.GET_TRANS, naziv);
+		try {
+			Main.transceiver.send(request);
+			Response response = (Response) Main.transceiver.recieve();
+			
+			if (response.getException() != null) {
+				response.getException().printStackTrace();
+				return null;
+			}
+			ret = (Transport) response.getData();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		return ret;
+	}
+	
+	public static Zemlja get_zemlja(String naziv) {
+		Zemlja ret;
+		Request request = new Request(Operation.GET_ZEMLJA, naziv);
+		try {
+			Main.transceiver.send(request);
+			Response response = (Response) Main.transceiver.recieve();
+			
+			if (response.getException() != null) {
+				response.getException().printStackTrace();
+				return null;
+			}
+			ret = (Zemlja) response.getData();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		return ret;
+	}
+	
+	public static void updatePutovanje (Putovanje putovanje) {
+		Request request = new Request(Operation.UPDATE_PUTOVANJE, putovanje);
+		try {
+			Main.transceiver.send(request);
+			Response response = (Response) Main.transceiver.recieve();
+			
+			if (response.getException() != null) {
+				response.getException().printStackTrace();
+				return;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		return;
 	}
 }

@@ -125,6 +125,24 @@ public class ServerHandler extends Thread {
 				result = 1;	
 				break;
 			}
+			
+			case Operation.GET_TRANS: {
+				String naziv = (String) request.getArg();
+				result = broker.getTransport(naziv);
+				break;
+			}
+			
+			case Operation.GET_ZEMLJA: {
+				String naziv = (String) request.getArg();
+				result = broker.getZemlja(naziv);
+				break;
+			}
+			
+			case Operation.UPDATE_PUTOVANJE: {
+				Putovanje put = (Putovanje) request.getArg();
+				broker.updatePutovanje(put);
+				break;
+			}
 		}
 		return result;
 	}
