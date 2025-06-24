@@ -134,4 +134,22 @@ public class Connection {
 		
 		return;
 	}
+	
+	public static void insertPutovanje (Putovanje putovanje) {
+		Request request = new Request(Operation.INSERT_PUTOVANJE, putovanje);
+		try {
+			Main.transceiver.send(request);
+			Response response = (Response) Main.transceiver.recieve();
+			
+			if (response.getException() != null) {
+				response.getException().printStackTrace();
+				return;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		return;
+	}
 }

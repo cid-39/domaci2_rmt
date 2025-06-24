@@ -143,6 +143,12 @@ public class ServerHandler extends Thread {
 				broker.updatePutovanje(put);
 				break;
 			}
+			
+			case Operation.INSERT_PUTOVANJE: {
+				Putovanje put = (Putovanje) request.getArg();
+				broker.insertPutovanje(put);
+				break;
+			}
 		}
 		return result;
 	}

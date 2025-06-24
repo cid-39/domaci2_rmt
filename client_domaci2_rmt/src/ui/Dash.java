@@ -77,6 +77,14 @@ public class Dash extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton btnNewButton = new JButton("New Putovanje");
+				btnNewButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						NewPutovanjeDialog dialog = new NewPutovanjeDialog(user);
+					    dialog.setLocationRelativeTo(Dash.this);
+					    dialog.setVisible(true);
+					    loadTable(); // reload table after creation
+					}
+				});
 				buttonPane.add(btnNewButton);
 			}
 			{
