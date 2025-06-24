@@ -14,6 +14,7 @@ import communication.Operation;
 import communication.Request;
 import communication.Response;
 import communication.Transceiver;
+import model.Putovanje;
 import model.User;
 
 
@@ -111,7 +112,19 @@ public class ServerHandler extends Thread {
 				result = registerUser(user.getUsername(), user.getPassword(), user.getIme(), user.getPrezime(), user.getEmail(), user.getJmbg(), user.getBroj_pasosa(), user.getDatum_rodjenja());    
 				break;
 			}
-		
+			
+			case Operation.GET_PUT: {
+				Integer uid = (Integer) request.getArg();
+				result = broker.getPutovanja(uid.intValue());
+				break;
+			}
+			
+			case Operation.UPDATE_PUT: {
+				Putovanje putovanje = (Putovanje) request.getArg();
+				broker.updatePutovanje(putovanje);
+				result = 1;	
+				break;
+			}
 		}
 		return result;
 	}

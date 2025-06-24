@@ -5,6 +5,7 @@ import java.net.Socket;
 
 import communication.Transceiver;
 import model.User;
+import ui.Dash;
 import ui.LoginForm;
 
 public class Main {
@@ -24,6 +25,10 @@ public class Main {
 		User logedUser = loginform.getLoginUser();
 		loginform.dispose();
 		
+		
+		Dash dash = new Dash(logedUser);
+		dash.setLocationRelativeTo(null);
+		dash.setVisible(true);
 		System.out.println("too soon....");
 //		
 //		System.out.println("jebo mame ubise ga");
