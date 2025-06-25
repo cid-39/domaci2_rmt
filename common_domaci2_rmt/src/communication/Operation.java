@@ -10,5 +10,6 @@ public enum Operation implements Serializable {
 	GET_TRANS,	// data -> String
 	GET_ZEMLJA,// data -> String
 	UPDATE_PUTOVANJE, // data > Putovanje
-	INSERT_PUTOVANJE // data Putovanje
+	INSERT_PUTOVANJE, // data Putovanje
+	INSERT_GUEST_PUTOVANJE // Putovanje
 }

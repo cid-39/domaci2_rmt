@@ -1,5 +1,6 @@
 package client_communication;
 
+import java.time.LocalDate;
 import java.util.LinkedList;
 
 import communication.Operation;
@@ -55,11 +56,9 @@ public class Connection {
 		return user;
 	}
 	
-	public static LinkedList<Putovanje> get_putovanja(int uid) {
+	public static LinkedList<Putovanje> getPutovanja(User user) {
 		LinkedList<Putovanje> put;
-		@SuppressWarnings("removal")
-		Integer id = new Integer(uid);
-		Request request = new Request(Operation.GET_PUT, id);
+		Request request = new Request(Operation.GET_PUT, user);
 		try {
 			Main.transceiver.send(request);
 			Response response = (Response) Main.transceiver.recieve();
@@ -137,6 +136,24 @@ public class Connection {
 	
 	public static void insertPutovanje (Putovanje putovanje) {
 		Request request = new Request(Operation.INSERT_PUTOVANJE, putovanje);
+		try {
+			Main.transceiver.send(request);
+			Response response = (Response) Main.transceiver.recieve();
+			
+			if (response.getException() != null) {
+				response.getException().printStackTrace();
+				return;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		return;
+	}
+
+	public static void insertGuestPutovanje(Putovanje putovanje) {
+		Request request = new Request(Operation.INSERT_GUEST_PUTOVANJE, putovanje);
 		try {
 			Main.transceiver.send(request);
 			Response response = (Response) Main.transceiver.recieve();

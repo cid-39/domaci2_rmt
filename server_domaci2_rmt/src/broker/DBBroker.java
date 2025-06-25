@@ -221,6 +221,40 @@ public class DBBroker {
 		return retList;
     }
     
+    public LinkedList<Putovanje> getPutovanja(String jmbg, String broj_pasosa) {
+    	LinkedList<Putovanje> retList = new LinkedList<Putovanje>();
+    	try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM Putovanje WHERE user_id in (SELECT id FROM User WHERE jmbg = ? AND broj_pasosa = ?) ORDER BY id, zemlja_id");
+            statement.setString(1, jmbg);
+            statement.setString(2, broj_pasosa);
+            ResultSet rs = statement.executeQuery();
+            Putovanje tempPutovanje = new Putovanje(null, null, null, null, null, null, false);
+            tempPutovanje.setId(Integer.MIN_VALUE);
+            while (rs.next()) { 
+            	if ( rs.getInt("id")==tempPutovanje.getId() ) {
+            		LinkedList<Zemlja> zemlje = tempPutovanje.getZemlja();
+            		zemlje.add(getZemlja(rs.getInt("zemlja_id")));
+            		tempPutovanje.setZemlja(zemlje);
+            		continue;
+            	}
+            	if(tempPutovanje.getId() != Integer.MIN_VALUE) retList.add(tempPutovanje);
+            	
+            	User putnik = getUser(rs.getInt("user_id"));
+            	Transport transport = getTransport(rs.getInt("transport_id"));
+            	LinkedList<Zemlja> zemlje = new LinkedList<Zemlja>();
+            	zemlje.add(getZemlja(rs.getInt("zemlja_id")));
+
+            	tempPutovanje = new Putovanje(putnik, zemlje, rs.getDate("datum_prijave").toLocalDate(), rs.getDate("datum_ulaska").toLocalDate(), rs.getDate("datum_izlaska").toLocalDate(), transport, rs.getBoolean("placa_se"));
+            	tempPutovanje.setId(rs.getInt("id"));
+            }
+            retList.add(tempPutovanje);
+        } catch (SQLException e) {
+            System.out.println("DBBroker: error in getPutovanja");
+            e.printStackTrace();
+        }
+		return retList;
+	}
+    
     public void updatePutovanje(Putovanje putovanje) {
     	try {
     		// can't be bothered :)
@@ -336,4 +370,5 @@ public class DBBroker {
         }
     	return 0;
     }
+
 }

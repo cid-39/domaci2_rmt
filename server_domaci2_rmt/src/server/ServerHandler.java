@@ -114,8 +114,10 @@ public class ServerHandler extends Thread {
 			}
 			
 			case Operation.GET_PUT: {
-				Integer uid = (Integer) request.getArg();
-				result = broker.getPutovanja(uid.intValue());
+				User user = (User) request.getArg();
+				if (user.getId() == Integer.MIN_VALUE) {
+					result = broker.getPutovanja(user.getJmbg(), user.getBroj_pasosa());
+				} else result = broker.getPutovanja(user.getId());
 				break;
 			}
 			
@@ -149,6 +151,27 @@ public class ServerHandler extends Thread {
 				broker.insertPutovanje(put);
 				break;
 			}
+			
+			case Operation.INSERT_GUEST_PUTOVANJE: {
+				Putovanje put = (Putovanje) request.getArg();
+
+				User checkUser = broker.getPerson(put.getPutnik().getJmbg());
+				if (!put.getPutnik().equals(checkUser)) {
+					throw new RuntimeException("Data not matching for given jmbg");
+				}
+				User existingUser = broker.getUser(put.getPutnik().getJmbg());
+				if (existingUser != null) {
+					put.setPutnik(existingUser);
+					broker.insertPutovanje(put);
+					break;
+				} 
+				
+				User newUser = addUserNoRegister(put.getPutnik().getIme(), put.getPutnik().getPrezime(), put.getPutnik().getJmbg(), put.getPutnik().getBroj_pasosa(), put.getPutnik().getDatum_rodjenja());        
+				put.setPutnik(newUser);
+				
+				broker.insertPutovanje(put);
+				break;
+			}
 		}
 		return result;
 	}
@@ -174,6 +197,12 @@ public class ServerHandler extends Thread {
 		broker.insertUser(user);
 		return user;
 	}
-
+	
+	private static User addUserNoRegister(String ime, String prezime, String jmbg, String broj_pasosa, LocalDate datum_rodjenja) {
+		User user = new User(Integer.MIN_VALUE, "h", "hold", ime, prezime, "hold", jmbg, broj_pasosa, datum_rodjenja);
+		broker.insertUser(user);
+		return user;
+	}
+	
 	
 }

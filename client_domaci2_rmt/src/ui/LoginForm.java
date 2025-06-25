@@ -39,7 +39,7 @@ public class LoginForm extends JDialog {
 		super(parent, "Login", true);
 //		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
-		setBounds(100, 100, 292, 163);
+		setBounds(100, 100, 372, 163);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -102,6 +102,16 @@ public class LoginForm extends JDialog {
 				});
 				loginButton.setActionCommand("Cancel");
 				buttonPane.add(loginButton);
+			}
+			{
+				JButton btnContinueAsGuest = new JButton("Continue as guest");
+				btnContinueAsGuest.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						login_user = null;
+						setVisible(false);
+					}
+				});
+				buttonPane.add(btnContinueAsGuest);
 			}
 		}
 	}

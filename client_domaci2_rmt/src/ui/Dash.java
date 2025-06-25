@@ -33,19 +33,6 @@ public class Dash extends JDialog {
 	private JTable table;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			Dash dialog = new Dash(null);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * Create the dialog.
 	 */
 	public Dash(User user) {
@@ -104,7 +91,7 @@ public class Dash extends JDialog {
 				        }
 
 
-				        LinkedList<Putovanje> putovanja = Connection.get_putovanja(user.getId());
+				        LinkedList<Putovanje> putovanja = Connection.getPutovanja(user);
 				        if (selectedRow >= putovanja.size()) {
 				            JOptionPane.showMessageDialog(Dash.this, "Invalid selection.");
 				            return;
@@ -151,7 +138,7 @@ public class Dash extends JDialog {
 	}
 
 	private Object[][] getPutovanjeData() {
-		LinkedList<Putovanje> putovanja = Connection.get_putovanja(user.getId());
+		LinkedList<Putovanje> putovanja = Connection.getPutovanja(user);
 		Object[][] ret = new Object[putovanja.size()][7];
 		int red=0;
 		for (Putovanje putovanje : putovanja) {
