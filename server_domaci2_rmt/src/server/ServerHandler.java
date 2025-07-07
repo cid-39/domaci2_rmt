@@ -191,10 +191,19 @@ public class ServerHandler extends Thread {
 		if (!user.equals(checkUser)) {
 			throw new RuntimeException("Data not matching for given jmbg");
 		}
-		if (broker.getUser(jmbg) != null) {
-			throw new RuntimeException("User with given jmbg already registered");
+		
+		checkUser = null;
+		checkUser = broker.getUser(jmbg);
+		
+		if (checkUser != null) {
+			if (checkUser.getUsername().equals("h") || checkUser.getPassword().equals("hold") || checkUser.getEmail().equals("hold")) {
+				broker.updateUserCreds(user);
+			} else {
+				throw new RuntimeException("User with given jmbg already registered");
+			}
+		} else {
+			broker.insertUser(user);			
 		}
-		broker.insertUser(user);
 		return user;
 	}
 	

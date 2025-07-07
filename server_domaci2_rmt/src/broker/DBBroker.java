@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.sql.Date;
 import java.util.LinkedList;
 
+import javax.management.RuntimeErrorException;
+
 import model.Putovanje;
 import model.Transport;
 import model.User;
@@ -82,6 +84,33 @@ public class DBBroker {
             e.printStackTrace();
         }
 		return null;
+    }
+    
+    public void updateUserCreds(User user) {
+    	try {
+    		PreparedStatement statement = connection.prepareStatement("UPDATE User SET username=?, password=?, email=? WHERE jmbg=?");
+    		statement.setString(1, user.getUsername());
+    		statement.setString(2, user.getPassword());
+   		 	statement.setString(3, user.getEmail());
+   		 	statement.setString(4, user.getJmbg());
+   		 	int affectedrows = statement.executeUpdate();
+   		 	if (affectedrows != 1) throw new RuntimeException("Updated rows != 1");
+   		 	try {
+   		 		connection.commit();
+   		 	} catch (SQLException e1) {
+   		 		// TODO Auto-generated catch block
+   		 		e1.printStackTrace();
+   		 	}	 	
+    	} catch (SQLException e) {
+    		try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    		System.out.println("DBBroker: error in updateUserCreds");
+    		e.printStackTrace();
+       }
     }
     
     public User getUser (String jmbg) {
