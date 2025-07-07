@@ -198,6 +198,7 @@ public class ServerHandler extends Thread {
 		if (checkUser != null) {
 			if (checkUser.getUsername().equals("h") || checkUser.getPassword().equals("hold") || checkUser.getEmail().equals("hold")) {
 				broker.updateUserCreds(user);
+				user.setId(checkUser.getId());
 			} else {
 				throw new RuntimeException("User with given jmbg already registered");
 			}

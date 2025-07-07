@@ -95,12 +95,7 @@ public class DBBroker {
    		 	statement.setString(4, user.getJmbg());
    		 	int affectedrows = statement.executeUpdate();
    		 	if (affectedrows != 1) throw new RuntimeException("Updated rows != 1");
-   		 	try {
-   		 		connection.commit();
-   		 	} catch (SQLException e1) {
-   		 		// TODO Auto-generated catch block
-   		 		e1.printStackTrace();
-   		 	}	 	
+   		 	connection.commit(); 	
     	} catch (SQLException e) {
     		try {
 				connection.rollback();
