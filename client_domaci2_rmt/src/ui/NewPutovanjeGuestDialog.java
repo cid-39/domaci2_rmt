@@ -113,17 +113,16 @@ public class NewPutovanjeGuestDialog extends JDialog {
 
                 nonRegUser.setDatum_rodjenja(datumRodjenjaFromJMBG(jmbgNew));
                 
-                Putovanje newPutovanje = new Putovanje(null, null, null, null, null, null, true);
-
-                newPutovanje.setDatum_prijave(Date.valueOf(txtDatumPrijave.getText().strip()).toLocalDate());
-                newPutovanje.setDatum_ulaska(Date.valueOf(txtDatumUlaska.getText().strip()).toLocalDate());
-                newPutovanje.setDatum_izlaska(Date.valueOf(txtDatumIzlaska.getText().strip()).toLocalDate());
-
-                updateTransport(newPutovanje, (String) transportDropdown.getSelectedItem());
-                updateZemlje(newPutovanje, countryDropdown.getSelectedItems());
-
-        		newPutovanje.setPlaca_se(checkPlacaSe(nonRegUser.getDatum_rodjenja()));
-        		newPutovanje.setPutnik(nonRegUser);
+                Transport transport = Connection.get_transport((String) transportDropdown.getSelectedItem());
+                LinkedList<Zemlja> zemlje = new LinkedList<>();
+                for (String naziv : countryDropdown.getSelectedItems()) {
+                    Zemlja zemlja = Connection.get_zemlja(naziv);
+                    zemlje.add(zemlja);
+                }
+                
+                Putovanje newPutovanje = new Putovanje(nonRegUser, zemlje, Date.valueOf(txtDatumPrijave.getText().strip()).toLocalDate(), 
+                		Date.valueOf(txtDatumUlaska.getText().strip()).toLocalDate(), Date.valueOf(txtDatumIzlaska.getText().strip()).toLocalDate(), 
+                		transport, checkPlacaSe(nonRegUser.getDatum_rodjenja()));
 
                 Connection.insertGuestPutovanje(newPutovanje);
                 JOptionPane.showMessageDialog(this, "Putovanje created.");
@@ -152,17 +151,4 @@ public class NewPutovanjeGuestDialog extends JDialog {
 		return Date.valueOf(date).toLocalDate();
 	}
 
-	private void updateZemlje(Putovanje p, LinkedList<String> selectedItems) {
-        LinkedList<Zemlja> zemlje = new LinkedList<>();
-        for (String naziv : selectedItems) {
-            Zemlja zemlja = Connection.get_zemlja(naziv);
-            zemlje.add(zemlja);
-        }
-        p.setZemlja(zemlje);
-    }
-
-    private void updateTransport(Putovanje p, String selectedItem) {
-        Transport transport = Connection.get_transport(selectedItem);
-        p.setTransport(transport);
-    }
 }

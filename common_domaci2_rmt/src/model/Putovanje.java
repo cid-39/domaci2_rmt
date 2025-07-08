@@ -13,6 +13,16 @@ public class Putovanje implements Serializable {
 	private LocalDate datum_izlaska;
 	private Transport transport;
 	private boolean placa_se;
+	public Putovanje () {
+		this.id = Integer.MIN_VALUE;
+		this.putnik = null;
+		this.zemlje = null;
+		this.datum_prijave = null;
+		this.datum_ulaska = null;
+		this.datum_izlaska = null;
+		this.transport = null;
+		this.placa_se = true;
+	}
 	public Putovanje(User putnik, LinkedList<Zemlja> zemlja, LocalDate datum_prijave, LocalDate datum_ulaska,
 			LocalDate datum_izlaska, Transport transport, boolean placa_se) {
 		if (!validacijaPutovanja(putnik, zemlja, datum_prijave, datum_ulaska, datum_izlaska, transport, placa_se))
@@ -87,6 +97,24 @@ public class Putovanje implements Serializable {
 
 	private boolean validacijaPutovanja(User putnik, LinkedList<Zemlja> zemlje, LocalDate datum_prijave, LocalDate datum_ulaska,
 			LocalDate datum_izlaska, Transport transport, boolean placa_se) {
-		return true; // To be implemented
+		
+		if (putnik == null || zemlje == null || zemlje.isEmpty() || datum_prijave == null || datum_ulaska == null || datum_izlaska == null || transport == null)
+	        return false;
+
+	    if (datum_ulaska.isBefore(LocalDate.now()))
+	        return false;
+
+	    if (datum_izlaska.isBefore(datum_ulaska))
+	        return false;
+
+	    if (datum_ulaska.plusDays(90).isBefore(datum_izlaska))
+	        return false;
+
+	    boolean shouldPay = !(putnik.getDatum_rodjenja().isAfter(LocalDate.now().minusYears(18)) || putnik.getDatum_rodjenja().isBefore(LocalDate.now().minusYears(70)));
+
+	    if (placa_se != shouldPay)
+	        return false;
+
+	    return true;
 	}
 }

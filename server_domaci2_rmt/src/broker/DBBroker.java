@@ -218,7 +218,7 @@ public class DBBroker {
     	try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM Putovanje WHERE user_id = "+userId+" ORDER BY id, zemlja_id");
             ResultSet rs = statement.executeQuery();
-            Putovanje tempPutovanje = new Putovanje(null, null, null, null, null, null, false);
+            Putovanje tempPutovanje = new Putovanje();
             tempPutovanje.setId(Integer.MIN_VALUE);
             while (rs.next()) { 
             	if ( rs.getInt("id")==tempPutovanje.getId() ) {
@@ -253,7 +253,7 @@ public class DBBroker {
             statement.setString(1, jmbg);
             statement.setString(2, broj_pasosa);
             ResultSet rs = statement.executeQuery();
-            Putovanje tempPutovanje = new Putovanje(null, null, null, null, null, null, false);
+            Putovanje tempPutovanje = new Putovanje();
             tempPutovanje.setId(Integer.MIN_VALUE);
             while (rs.next()) { 
             	if ( rs.getInt("id")==tempPutovanje.getId() ) {
@@ -358,7 +358,7 @@ public class DBBroker {
     }
     
     public Putovanje getPutovanje(int id) {
-    	Putovanje putovanje=new Putovanje(null, null, null, null, null, null, false);
+    	Putovanje putovanje=new Putovanje();
     	try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM Putovanje WHERE id = "+id);
             ResultSet rs = statement.executeQuery();
