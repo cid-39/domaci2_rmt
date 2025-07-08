@@ -37,7 +37,7 @@ public class Dash extends JDialog {
 	 */
 	public Dash(User user) {
 		this.user = user;
-	
+		setModal(true);
 		
 		setBounds(100, 100, 701, 507);
 		getContentPane().setLayout(new BorderLayout());
@@ -120,7 +120,7 @@ public class Dash extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
-		
+
 		loadTable();
 	}
 	
@@ -139,8 +139,8 @@ public class Dash extends JDialog {
 
 	private Object[][] getPutovanjeData() {
 		LinkedList<Putovanje> putovanja = Connection.getPutovanja(user);
+		if (putovanja == null || putovanja.isEmpty()) return new Object[0][7];
 		Object[][] ret = new Object[putovanja.size()][7];
-		if (putovanja.isEmpty()) return ret;
 		int red=0;
 		for (Putovanje putovanje : putovanja) {
 			try {

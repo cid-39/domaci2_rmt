@@ -112,8 +112,11 @@ public class GuestDash extends JDialog {
     	user.setId(Integer.MIN_VALUE); // for backend to differentiate 
         LinkedList<Putovanje> putovanja = Connection.getPutovanja(user);
         String[] columnNames = {"Zemlje", "Datum prijave", "Datum ulaska", "Datum izlaska", "Nacin transporta", "Placa se", "Status"};
-        Object[][] data = new Object[putovanja.size()][7];
-
+        Object[][] data;
+        if (putovanja == null || putovanja.isEmpty()) {
+        	data = new Object[0][7];
+        } else data = new Object[putovanja.size()][7];
+        
         int red = 0;
         for (Putovanje putovanje : putovanja) {
             data[red][0] = getZemljeString(putovanje.getZemlja());

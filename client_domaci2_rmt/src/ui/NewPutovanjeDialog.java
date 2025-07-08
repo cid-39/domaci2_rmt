@@ -10,6 +10,8 @@ import javax.swing.*;
 import client_communication.Connection;
 
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -66,7 +68,7 @@ public class NewPutovanjeDialog extends JDialog {
         getContentPane().add(new JLabel("Placa se:"));
         chkPlacaSe = new JCheckBox();
         chkPlacaSe.setEnabled(false);
-        if (user.getDatum_rodjenja().plusYears(18).isAfter(LocalDate.now()))
+        if (user.getDatum_rodjenja().isAfter(LocalDate.now().minusYears(18)) || user.getDatum_rodjenja().isBefore(LocalDate.now().minusYears(70)))
         	chkPlacaSe.setSelected(false);
         else chkPlacaSe.setSelected(true);
         
@@ -88,6 +90,7 @@ public class NewPutovanjeDialog extends JDialog {
 
                 Connection.insertPutovanje(newPutovanje);
                 JOptionPane.showMessageDialog(this, "Putovanje created.");
+                writePutovanjeToFile(newPutovanje);
                 dispose();
 
             } catch (Exception ex) {
@@ -100,4 +103,53 @@ public class NewPutovanjeDialog extends JDialog {
         btnCancel.addActionListener(e -> dispose());
         getContentPane().add(btnCancel);
     }
+    
+    private void writePutovanjeToFile(Putovanje putovanje) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("putovanje_"+putovanje.getDatum_prijave().toString()+".txt", true))) {
+        	 writer.write("===== PUTOVANJE =====");
+             writer.newLine();
+
+             writer.write("Ime: " + putovanje.getPutnik().getIme());
+             writer.newLine();
+             writer.write("Prezime: " + putovanje.getPutnik().getPrezime());
+             writer.newLine();
+             writer.write("Email: " + putovanje.getPutnik().getEmail());
+             writer.newLine();
+             writer.write("JMBG: " + putovanje.getPutnik().getJmbg());
+             writer.newLine();
+             writer.write("Broj pasosa: " + putovanje.getPutnik().getBroj_pasosa());
+             writer.newLine();
+             writer.write("Datum rodjenja: " + putovanje.getPutnik().getDatum_rodjenja());
+             writer.newLine();
+
+             writer.write("----------------------");
+             writer.newLine();
+
+             writer.write("Datum prijave: " + putovanje.getDatum_prijave());
+             writer.newLine();
+             writer.write("Datum ulaska: " + putovanje.getDatum_ulaska());
+             writer.newLine();
+             writer.write("Broj dana boravka: " + (putovanje.getDatum_izlaska().toEpochDay() - putovanje.getDatum_ulaska().toEpochDay()));
+             writer.newLine();
+
+             writer.write("Zemlje: ");
+             for (int i = 0; i < putovanje.getZemlja().size(); i++) {
+                 writer.write(putovanje.getZemlja().get(i).getNaziv());
+                 if (i < putovanje.getZemlja().size() - 1) {
+                     writer.write(", ");
+                 }
+             }
+             writer.newLine();
+             writer.write("Transport: " + putovanje.getTransport().getTip());
+             writer.newLine();
+             writer.write("Placa se: " + (putovanje.isPlaca_se() ? "DA" : "NE"));
+             writer.newLine();
+             writer.write("=======================");
+             writer.newLine();
+             
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to write to file: " + e.getMessage());
+        }
+    }
+
 }
