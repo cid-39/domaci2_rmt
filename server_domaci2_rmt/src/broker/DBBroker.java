@@ -237,7 +237,8 @@ public class DBBroker {
             	tempPutovanje = new Putovanje(putnik, zemlje, rs.getDate("datum_prijave").toLocalDate(), rs.getDate("datum_ulaska").toLocalDate(), rs.getDate("datum_izlaska").toLocalDate(), transport, rs.getBoolean("placa_se"));
             	tempPutovanje.setId(rs.getInt("id"));
             }
-            retList.add(tempPutovanje);
+            if (tempPutovanje.getId() != Integer.MIN_VALUE)
+            	retList.add(tempPutovanje);
         } catch (SQLException e) {
             System.out.println("DBBroker: error in getPutovanja");
             e.printStackTrace();

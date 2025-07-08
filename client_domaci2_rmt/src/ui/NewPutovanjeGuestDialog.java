@@ -110,25 +110,21 @@ public class NewPutovanjeGuestDialog extends JDialog {
                 nonRegUser.setJmbg(jmbgNew);
                 nonRegUser.setIme(ime);
                 nonRegUser.setPrezime(prezime); 
-                System.out.println("did it");
+
                 nonRegUser.setDatum_rodjenja(datumRodjenjaFromJMBG(jmbgNew));
-                System.out.println("did it");
                 
                 Putovanje newPutovanje = new Putovanje(null, null, null, null, null, null, true);
-                System.out.println("did it");
 
                 newPutovanje.setDatum_prijave(Date.valueOf(txtDatumPrijave.getText().strip()).toLocalDate());
                 newPutovanje.setDatum_ulaska(Date.valueOf(txtDatumUlaska.getText().strip()).toLocalDate());
                 newPutovanje.setDatum_izlaska(Date.valueOf(txtDatumIzlaska.getText().strip()).toLocalDate());
 
-                System.out.println("did it");
                 updateTransport(newPutovanje, (String) transportDropdown.getSelectedItem());
                 updateZemlje(newPutovanje, countryDropdown.getSelectedItems());
 
-                System.out.println("did it");
         		newPutovanje.setPlaca_se(checkPlacaSe(nonRegUser.getDatum_rodjenja()));
         		newPutovanje.setPutnik(nonRegUser);
-        		System.out.println("did it");
+
                 Connection.insertGuestPutovanje(newPutovanje);
                 JOptionPane.showMessageDialog(this, "Putovanje created.");
                 dispose();

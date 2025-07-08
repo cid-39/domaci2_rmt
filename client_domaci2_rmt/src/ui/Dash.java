@@ -140,8 +140,10 @@ public class Dash extends JDialog {
 	private Object[][] getPutovanjeData() {
 		LinkedList<Putovanje> putovanja = Connection.getPutovanja(user);
 		Object[][] ret = new Object[putovanja.size()][7];
+		if (putovanja.isEmpty()) return ret;
 		int red=0;
 		for (Putovanje putovanje : putovanja) {
+			try {
 			ret[red][0] = getZemljeString(putovanje.getZemlja());
 			ret[red][1] = putovanje.getDatum_prijave();
 			ret[red][2] = putovanje.getDatum_ulaska();
@@ -149,6 +151,9 @@ public class Dash extends JDialog {
 			ret[red][4] = putovanje.getTransport().getTip();
 			ret[red][5] = putovanje.isPlaca_se() ? "Da" : "Ne";
 			ret[red][6] = getStatus(putovanje);
+			} catch (Exception e) {
+				System.err.println("Error in parsing data for table");
+			}
 			red++;
 		}
 		return ret;

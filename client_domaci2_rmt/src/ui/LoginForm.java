@@ -79,7 +79,7 @@ public class LoginForm extends JDialog {
 						regform.setVisible(true);
 						login_user = regform.getRegistered();
 						regform.dispose();
-						setVisible(false);
+						if (login_user != null)	setVisible(false);
 					}
 				});
 				buttonPane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -107,7 +107,8 @@ public class LoginForm extends JDialog {
 				JButton btnContinueAsGuest = new JButton("Continue as guest");
 				btnContinueAsGuest.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						login_user = null;
+						login_user = new User();
+						login_user.setId(Integer.MAX_VALUE);
 						setVisible(false);
 					}
 				});

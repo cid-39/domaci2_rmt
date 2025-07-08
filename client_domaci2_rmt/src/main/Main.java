@@ -29,19 +29,18 @@ public class Main {
 		loginform.setVisible(true);
 		User logedUser = loginform.getLoginUser();
 		loginform.dispose();
-		
-		if (logedUser == null) {
-			GuestDash gdash = new GuestDash();
-			gdash.setLocationRelativeTo(null);
-			gdash.setVisible(true);
-		} else {		
-			Dash dash = new Dash(logedUser);
-			dash.setLocationRelativeTo(null);
-			dash.setVisible(true);
-		}
-		System.out.println("too soon....");
-//		
-//		System.out.println("jebo mame ubise ga");
+		if (logedUser!=null)
+			if (logedUser.getId() == Integer.MAX_VALUE) {
+				GuestDash gdash = new GuestDash();
+				gdash.setLocationRelativeTo(null);
+				gdash.setVisible(true);
+			} else {		
+				Dash dash = new Dash(logedUser);
+				dash.setLocationRelativeTo(null);
+				dash.setVisible(true);
+			}
+		System.out.println("Exiting app....");
+		System.exit(0);
 	}
 
 }
