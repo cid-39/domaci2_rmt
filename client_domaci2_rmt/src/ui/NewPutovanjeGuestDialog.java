@@ -141,7 +141,7 @@ public class NewPutovanjeGuestDialog extends JDialog {
     }
 
     private boolean checkPlacaSe(LocalDate datum_rodjenja) {
-        return !datum_rodjenja.isAfter(LocalDate.now().minusYears(18));
+        return !(datum_rodjenja.isAfter(LocalDate.now().minusYears(18)) || datum_rodjenja.isBefore(LocalDate.now().minusYears(70)));
 	}
 
 	private LocalDate datumRodjenjaFromJMBG(String jmbg) {
