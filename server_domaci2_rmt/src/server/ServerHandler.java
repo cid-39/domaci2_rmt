@@ -27,29 +27,42 @@ public class ServerHandler extends Thread {
 	public static void main(String[] args) {
 		System.out.println("Server starting...");
 		try {
+			DBBroker.get_instance().connect();
 			ServerSocket serSock = new ServerSocket(9454);
 			System.out.println("Server started on port: " + serSock.getLocalPort());
 			
 			while (true) {
 				Socket socket = serSock.accept();
 				
-				System.out.println("+	New connection accepted");
+				System.out.println("++	New connection accepted");
 				
 				new ServerHandler(socket).start();
+				
+				// fake break
+				if (socket.getPort() == new Integer(3)) {
+					break;
+				}
 			}
+			
+			DBBroker.get_instance().disconnect();
 		}
 		catch (BindException e) {
 			System.err.println("-- Port already in use - stop all server instances.");
 		} 
 		catch (IOException e) {
 			e.printStackTrace();
+		} catch (SQLException e) {
+			System.err.printf("Error in communication with database\nShutting down...\n");
+			e.printStackTrace();
+			System.exit(-1);
 		}
 	}
 
 	public 	ServerHandler(Socket socket) {
 		this.socket = socket;	
 		
-		System.out.println("+ ServerHandler thread started for client: " + socket.getInetAddress());
+		System.out.println("	ServerHandler thread started for client: " + socket.getInetAddress());
+		System.out.println();
 	}
 
 	@Override
@@ -62,8 +75,6 @@ public class ServerHandler extends Thread {
 		Object result = null;
 		
 		try {
-			broker.connect();
-
 			while (true) {
 				Request request = (Request) transceiver.recieve();
 				
@@ -88,10 +99,11 @@ public class ServerHandler extends Thread {
 					return;
 				} 
 			}
-			
-			broker.disconnect();
+		} catch (ClassCastException e) {
+			System.err.println("Failed to cast data to Request, closing connection to client " + socket.getInetAddress());
+			return;
 		} catch (Exception e) {
-			
+			// TODO: handle exception
 		}
 		
 	}

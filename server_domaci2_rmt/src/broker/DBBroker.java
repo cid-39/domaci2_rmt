@@ -94,13 +94,13 @@ public class DBBroker {
    		 	statement.setString(3, user.getEmail());
    		 	statement.setString(4, user.getJmbg());
    		 	int affectedrows = statement.executeUpdate();
-   		 	if (affectedrows != 1) throw new RuntimeException("Updated rows != 1");
+   		 	if (affectedrows != 1) throw new RuntimeException("DBBroker: Updated rows != 1");
    		 	connection.commit(); 	
     	} catch (SQLException e) {
     		try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
+				System.out.println("DBBroker: Unable to rollback, give up, there's no hope");
 				e1.printStackTrace();
 			}
     		System.out.println("DBBroker: error in updateUserCreds");
@@ -130,7 +130,7 @@ public class DBBroker {
             	return new User(0, "", "", rs.getString("ime"), rs.getString("prezime"), "", rs.getString("jmbg"), rs.getString("broj_pasosa"), rs.getDate("datum_rodjenja").toLocalDate());        
             }
         } catch (SQLException e) {
-            System.out.println("DBBroker: error in getUser");
+            System.out.println("DBBroker: error in getPerson");
             e.printStackTrace();
         }
 		return null;
@@ -159,7 +159,7 @@ public class DBBroker {
             try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
+				System.out.println("DBBroker: Unable to rollback, give up, there's no hope");
 				e1.printStackTrace();
 			}
         }
@@ -207,7 +207,7 @@ public class DBBroker {
             try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
+				System.out.println("DBBroker: Unable to rollback, give up, there's no hope");
 				e1.printStackTrace();
 			}
         }
@@ -293,7 +293,7 @@ public class DBBroker {
             try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
+				System.out.println("DBBroker: Unable to rollback, give up, there's no hope");
 				e1.printStackTrace();
 			}
         }
@@ -384,7 +384,7 @@ public class DBBroker {
 		return putovanje;
     }
 
-    private int removePutovanje(int id) {
+    private int removePutovanje(int id) { // Never used, there is an error :)
     	try {
     		 PreparedStatement statement = connection.prepareStatement("DELETE FROM Putovanje WHERE id="+id);
              int affectedrows = statement.executeUpdate();
