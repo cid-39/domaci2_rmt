@@ -122,6 +122,21 @@ public class DBBroker {
 		return null;
     }
     
+    public User getUserByUsername (String username) {
+    	try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM User WHERE username = ?");
+            statement.setString(1, username);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) { 
+            	return new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"), rs.getString("ime"), rs.getString("prezime"), rs.getString("email"), rs.getString("jmbg"), rs.getString("broj_pasosa"), rs.getDate("datum_rodjenja").toLocalDate());        
+            }
+        } catch (SQLException e) {
+            System.out.println("DBBroker: error in getUser");
+            e.printStackTrace();
+        }
+		return null;
+    }
+    
     public User getPerson (String jmbg) {
     	try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM Population WHERE jmbg = "+jmbg);

@@ -192,6 +192,12 @@ public class ServerHandler extends Thread {
 			String broj_pasosa, LocalDate datum_rodjenja) {
 		User user = new User();
 		user.setUsername(username);
+		// username check
+		User usernameCheckUser = broker.getUserByUsername(username);
+		if ( usernameCheckUser != null && usernameCheckUser.getUsername().equals(username)) {
+			throw new RuntimeException("Username already in use");
+		}
+		//
 		user.setPassword(password);
 		user.setIme(ime);
 		user.setPrezime(prezime);
