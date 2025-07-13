@@ -108,6 +108,9 @@ public class NewPutovanjeGuestDialog extends JDialog {
                 }
 
                 User nonRegUser = new User();
+                Transport transport = new Transport(0, "");
+                Putovanje newPutovanje;
+                try {
                 nonRegUser.setBroj_pasosa(pasosNew);
                 nonRegUser.setJmbg(jmbgNew);
                 nonRegUser.setIme(ime);
@@ -115,18 +118,41 @@ public class NewPutovanjeGuestDialog extends JDialog {
 
                 nonRegUser.setDatum_rodjenja(datumRodjenjaFromJMBG(jmbgNew));
                 
-                Transport transport = Connection.get_transport((String) transportDropdown.getSelectedItem());
+                transport = Connection.get_transport((String) transportDropdown.getSelectedItem());
+                
                 LinkedList<Zemlja> zemlje = new LinkedList<>();
                 for (String naziv : countryDropdown.getSelectedItems()) {
                     Zemlja zemlja = Connection.get_zemlja(naziv);
                     zemlje.add(zemlja);
                 }
+                LocalDate datum_prijave = null;
+                LocalDate datum_ulaska= null;
+                LocalDate datum_izlaska=null;
+                try {
+                datum_prijave = Date.valueOf(txtDatumPrijave.getText().strip()).toLocalDate();
+                datum_ulaska = Date.valueOf(txtDatumUlaska.getText().strip()).toLocalDate();
+                datum_izlaska = Date.valueOf(txtDatumIzlaska.getText().strip()).toLocalDate();
+                } catch (Exception ee) {
+                	JOptionPane.showMessageDialog(btnSave, "Dates are not valid", "Error", JOptionPane.WARNING_MESSAGE);
+                	return;
+				}
                 
-                Putovanje newPutovanje = new Putovanje(nonRegUser, zemlje, Date.valueOf(txtDatumPrijave.getText().strip()).toLocalDate(), 
-                		Date.valueOf(txtDatumUlaska.getText().strip()).toLocalDate(), Date.valueOf(txtDatumIzlaska.getText().strip()).toLocalDate(), 
+                newPutovanje = new Putovanje(nonRegUser, zemlje, datum_prijave, 
+                		datum_ulaska, datum_izlaska, 
                 		transport, checkPlacaSe(nonRegUser.getDatum_rodjenja()));
 
-                Connection.insertGuestPutovanje(newPutovanje);
+                } catch (Exception e1) {
+                	JOptionPane.showMessageDialog(btnSave, e1.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+                	return;
+                }
+                
+                try { 
+                	Connection.insertGuestPutovanje(newPutovanje);
+                } catch (Exception e2) {
+                	JOptionPane.showMessageDialog(btnSave, e2.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+                	return;
+				}
+                
                 JOptionPane.showMessageDialog(this, "Putovanje created.");
                 writePutovanjeToFile(newPutovanje);
                 dispose();

@@ -36,7 +36,7 @@ public class Connection {
 		return user;
 	}
 	
-	public static User register(User reg_user) {
+	public static User register(User reg_user) throws Exception {
 		Request request = new Request(Operation.REGISTER, reg_user);
 		User user;
 		try {
@@ -44,19 +44,17 @@ public class Connection {
 			Response response = (Response) Main.transceiver.recieve();
 			
 			if (response.getException() != null) {
-				response.getException().printStackTrace();
-				return null;
+				throw response.getException();
 			}
 			user = (User) response.getData();
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			throw e;
 		}
 		
 		return user;
 	}
 	
-	public static LinkedList<Putovanje> getPutovanja(User user) {
+	public static LinkedList<Putovanje> getPutovanja(User user) throws Exception {
 		LinkedList<Putovanje> put;
 		Request request = new Request(Operation.GET_PUT, user);
 		try {
@@ -64,13 +62,11 @@ public class Connection {
 			Response response = (Response) Main.transceiver.recieve();
 			
 			if (response.getException() != null) {
-				response.getException().printStackTrace();
-				return null;
+				throw response.getException();
 			}
 			put = (LinkedList<Putovanje>) response.getData();
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			throw e;
 		}
 		
 		return put;
@@ -116,55 +112,54 @@ public class Connection {
 		return ret;
 	}
 	
-	public static void updatePutovanje (Putovanje putovanje) {
+	public static void updatePutovanje (Putovanje putovanje) throws Exception {
+		try {     // this is clunky way to not send broken putovanje
+			Putovanje check = new Putovanje(putovanje.getPutnik(), putovanje.getZemlja(), putovanje.getDatum_prijave(), putovanje.getDatum_ulaska(), putovanje.getDatum_izlaska(), putovanje.getTransport(), putovanje.isPlaca_se());     
+		} catch (Exception e) {
+			throw e;
+		}
 		Request request = new Request(Operation.UPDATE_PUTOVANJE, putovanje);
 		try {
 			Main.transceiver.send(request);
 			Response response = (Response) Main.transceiver.recieve();
 			
 			if (response.getException() != null) {
-				response.getException().printStackTrace();
-				return;
+				throw response.getException();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			return;
+			throw e;
 		}
 		
 		return;
 	}
 	
-	public static void insertPutovanje (Putovanje putovanje) {
+	public static void insertPutovanje (Putovanje putovanje) throws Exception {
 		Request request = new Request(Operation.INSERT_PUTOVANJE, putovanje);
 		try {
 			Main.transceiver.send(request);
 			Response response = (Response) Main.transceiver.recieve();
 			
 			if (response.getException() != null) {
-				response.getException().printStackTrace();
-				return;
+				throw response.getException();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			return;
+			throw e;
 		}
 		
 		return;
 	}
 
-	public static void insertGuestPutovanje(Putovanje putovanje) {
+	public static void insertGuestPutovanje(Putovanje putovanje) throws Exception {
 		Request request = new Request(Operation.INSERT_GUEST_PUTOVANJE, putovanje);
 		try {
 			Main.transceiver.send(request);
 			Response response = (Response) Main.transceiver.recieve();
 			
 			if (response.getException() != null) {
-				response.getException().printStackTrace();
-				return;
+				throw response.getException();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			return;
+			throw e;
 		}
 		
 		return;

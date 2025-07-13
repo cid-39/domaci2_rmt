@@ -88,8 +88,13 @@ public class GuestDash extends JDialog {
                     JOptionPane.showMessageDialog(GuestDash.this, "Both JMBG and Broj Pasosa must be filled.");
                     return;
                 }
-
-                loadTable();
+                try {
+                	loadTable();
+                } catch (Exception e1) {
+                	currentJmbg="";
+                	currentPasos="";
+                	JOptionPane.showMessageDialog(btnSearch, e1.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+				}
             }
         });
     }
@@ -110,11 +115,25 @@ public class GuestDash extends JDialog {
     	user.setBroj_pasosa(currentPasos);
     	user.setJmbg(currentJmbg);
     	user.setId(Integer.MIN_VALUE); // for backend to differentiate 
-        LinkedList<Putovanje> putovanja = Connection.getPutovanja(user);
+        LinkedList<Putovanje> putovanja = null;
+		try {
+			putovanja = Connection.getPutovanja(user);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(table, "Greska u ocitavanju putovanja: " + e.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+		}
         String[] columnNames = {"Zemlje", "Datum prijave", "Datum ulaska", "Datum izlaska", "Nacin transporta", "Placa se", "Status"};
         Object[][] data;
         if (putovanja == null || putovanja.isEmpty()) {
         	data = new Object[0][7];
+        	DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+
+            table.setModel(model);
+            return;
         } else data = new Object[putovanja.size()][7];
         
         int red = 0;

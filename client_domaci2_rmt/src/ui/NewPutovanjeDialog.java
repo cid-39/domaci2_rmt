@@ -83,10 +83,18 @@ public class NewPutovanjeDialog extends JDialog {
                     zemlje.add(zemlja);
                 }
                 Transport transport = Connection.get_transport((String) transportDropdown.getSelectedItem());
-            	
-                Putovanje newPutovanje = new Putovanje(user, zemlje, Date.valueOf(txtDatumPrijave.getText().strip()).toLocalDate(),
-                		Date.valueOf(txtDatumUlaska.getText().strip()).toLocalDate(), 
-                		Date.valueOf(txtDatumIzlaska.getText().strip()).toLocalDate(), transport, chkPlacaSe.isSelected());
+                LocalDate dat_prijave=null;
+                LocalDate dat_ulaska=null;
+                LocalDate dat_izlaska=null;
+                try {
+                dat_prijave = Date.valueOf(txtDatumPrijave.getText().strip()).toLocalDate();
+                dat_ulaska = Date.valueOf(txtDatumUlaska.getText().strip()).toLocalDate();
+        		dat_izlaska =  Date.valueOf(txtDatumIzlaska.getText().strip()).toLocalDate();
+                } catch (Exception e1) {
+                	JOptionPane.showMessageDialog(btnSave, "Dates are not valid", "Error", JOptionPane.WARNING_MESSAGE);
+                	return;
+                }
+                Putovanje newPutovanje = new Putovanje(user, zemlje, dat_prijave, dat_ulaska, dat_izlaska, transport, chkPlacaSe.isSelected());
 
                 Connection.insertPutovanje(newPutovanje);
                 JOptionPane.showMessageDialog(this, "Putovanje created.");

@@ -298,6 +298,12 @@ public class DBBroker {
 	}
     
     public void updatePutovanje(Putovanje putovanje) {
+    	try {     // this is clunky way to stop a bug where putovanje gets deleted put 
+    			  // the editted one isnt inserted bcs its broken
+			Putovanje check = new Putovanje(putovanje.getPutnik(), putovanje.getZemlja(), putovanje.getDatum_prijave(), putovanje.getDatum_ulaska(), putovanje.getDatum_izlaska(), putovanje.getTransport(), putovanje.isPlaca_se());     
+		} catch (Exception e) {
+			throw e;
+		}
     	try {
     		// can't be bothered :)
     		removePutovanje(putovanje.getId());

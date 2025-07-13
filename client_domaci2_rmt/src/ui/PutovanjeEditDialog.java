@@ -89,13 +89,21 @@ public class PutovanjeEditDialog extends JDialog {
 
         JButton btnSave = new JButton("Save");
         btnSave.addActionListener(e -> {
-        	editingPutovanje.setDatum_prijave(Date.valueOf(txtDatumPrijave.getText().strip()).toLocalDate());
-        	editingPutovanje.setDatum_ulaska(Date.valueOf(txtDatumUlaska.getText().strip()).toLocalDate());
-        	editingPutovanje.setDatum_izlaska(Date.valueOf(txtDatumIzlaska.getText().strip()).toLocalDate());
+        	try {
+        		try {
+		        	editingPutovanje.setDatum_prijave(Date.valueOf(txtDatumPrijave.getText().strip()).toLocalDate());
+		        	editingPutovanje.setDatum_ulaska(Date.valueOf(txtDatumUlaska.getText().strip()).toLocalDate());
+		        	editingPutovanje.setDatum_izlaska(Date.valueOf(txtDatumIzlaska.getText().strip()).toLocalDate());
+        		} catch (Exception e1) {
+        			JOptionPane.showMessageDialog(btnSave, "Dates are not valid", "Error", JOptionPane.WARNING_MESSAGE);
+                	return;
+                }
         	updateTransport((String) transportDropdown.getSelectedItem());
         	updateZemlje(countryDropdown.getSelectedItems());
-        	
         	Connection.updatePutovanje(editingPutovanje);
+        	} catch (Exception e1) {
+        		JOptionPane.showMessageDialog(btnSave, e1.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+        		return;}
             JOptionPane.showMessageDialog(this, "Changes saved.");
             dispose();
         });

@@ -27,6 +27,7 @@ import java.awt.event.ActionEvent;
 public class Dash extends JDialog {
 
 	private User user;
+	private LinkedList<Putovanje> putovanja;
 	
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
@@ -36,6 +37,7 @@ public class Dash extends JDialog {
 	 * Create the dialog.
 	 */
 	public Dash(User user) {
+		
 		this.user = user;
 		setModal(true);
 		
@@ -90,13 +92,6 @@ public class Dash extends JDialog {
 				            return;
 				        }
 
-
-				        LinkedList<Putovanje> putovanja = Connection.getPutovanja(user);
-				        if (selectedRow >= putovanja.size()) {
-				            JOptionPane.showMessageDialog(Dash.this, "Invalid selection.");
-				            return;
-				        }
-
 				        Putovanje selectedPutovanje = putovanja.get(selectedRow);
 				        PutovanjeEditDialog editDialog = new PutovanjeEditDialog(selectedPutovanje);
 				        editDialog.setLocationRelativeTo(Dash.this);
@@ -138,7 +133,12 @@ public class Dash extends JDialog {
 	}
 
 	private Object[][] getPutovanjeData() {
-		LinkedList<Putovanje> putovanja = Connection.getPutovanja(user);
+		try {
+			putovanja = Connection.getPutovanja(user);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(table, "Greska u ocitavanju putovanja: " + e.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+			return new Object[0][7];
+		}
 		if (putovanja == null || putovanja.isEmpty()) return new Object[0][7];
 		Object[][] ret = new Object[putovanja.size()][7];
 		int red=0;

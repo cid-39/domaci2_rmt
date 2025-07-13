@@ -93,7 +93,11 @@ public class LoginForm extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						String username = textField.getText();
 						String password = passwordField.getText();
-						login_user = Connection.login(username, password);
+						try {
+							login_user = Connection.login(username, password);
+						} catch (Exception e1) {
+							JOptionPane.showMessageDialog(loginButton, e1.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+						}
 						if (login_user!=null) {
 							JOptionPane.showMessageDialog(loginButton, "Welcome", "Successful login!", JOptionPane.INFORMATION_MESSAGE);
 							setVisible(false);

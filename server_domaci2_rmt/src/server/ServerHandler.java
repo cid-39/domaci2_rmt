@@ -78,9 +78,11 @@ public class ServerHandler extends Thread {
 		Object result = null;
 		
 		try {
+			int broj=0;
 			while (true) {
+				System.out.println("handling sum "+broj++);
 				Request request = (Request) transceiver.recieve();
-				
+				exception=null;
 				// fake break
 				if (request.getArg() == new Integer(3)) {
 					break;
@@ -115,7 +117,6 @@ public class ServerHandler extends Thread {
 		Object result = null;
 		
 		switch (request.getOp()){
-		
 			case Operation.LOGIN: {
 				User user = (User) request.getArg();
 				result = broker.loginUser(user.getUsername(), user.getPassword());
@@ -179,6 +180,7 @@ public class ServerHandler extends Thread {
 				User existingUser = broker.getUser(put.getPutnik().getJmbg());
 				if (existingUser != null) {
 					put.setPutnik(existingUser);
+					if (validateNoOverlap(put)) throw new RuntimeException("Another putovanje already exists in the same counry and period");
 					broker.insertPutovanje(put);
 					break;
 				} 
@@ -270,7 +272,9 @@ public class ServerHandler extends Thread {
 	        if (sharesCountry) {
 	            LocalDate existingStart = existing.getDatum_ulaska();
 	            LocalDate existingEnd = existing.getDatum_izlaska();
-	            ret = newEnd.isAfter(existingStart) || newStart.isBefore(existingEnd);
+	            if (!(newEnd.isBefore(existingStart) || newStart.isAfter(existingEnd))) {
+	                return true;
+	            }
 	        }
 	    }
 	    return ret;

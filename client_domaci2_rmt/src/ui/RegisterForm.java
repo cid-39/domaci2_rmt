@@ -157,16 +157,30 @@ public class RegisterForm extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						User new_user = new User();
-						new_user.setUsername(usernameTextField.getText());
-						new_user.setPassword(passwordField.getText());
-						new_user.setIme(fNameTextField_1.getText());
-						new_user.setPrezime(lNameTextField_2.getText());
-						new_user.setEmail(emailTextField_3.getText());
-						new_user.setJmbg(jmbgTextField_4.getText());
-						new_user.setBroj_pasosa(passporNumberTextField_5.getText());
-						new_user.setDatum_rodjenja(Date.valueOf(bdayTextField_6.getText().strip()).toLocalDate());
-						
-						new_user = Connection.register(new_user);
+						try {
+							new_user.setUsername(usernameTextField.getText());
+							new_user.setPassword(passwordField.getText());
+							new_user.setIme(fNameTextField_1.getText());
+							new_user.setPrezime(lNameTextField_2.getText());
+							new_user.setEmail(emailTextField_3.getText());
+							new_user.setJmbg(jmbgTextField_4.getText());
+							new_user.setBroj_pasosa(passporNumberTextField_5.getText());
+							try {
+								new_user.setDatum_rodjenja(Date.valueOf(bdayTextField_6.getText().strip()).toLocalDate());
+							} catch (Exception ee) {
+		                		JOptionPane.showMessageDialog(okButton, "Date is not valid", "Error", JOptionPane.WARNING_MESSAGE);
+		                		return;
+							}
+						} catch (Exception e1) {
+							JOptionPane.showMessageDialog(okButton, e1.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+							return;
+						}
+						try {
+							new_user = Connection.register(new_user);
+						} catch (Exception e1) {
+							JOptionPane.showMessageDialog(okButton, e1.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+							return;
+						}
 						if(new_user!=null) {
 							JOptionPane.showMessageDialog(null, "Registered!", "Successful register!", JOptionPane.INFORMATION_MESSAGE);
 							registered = new_user;
