@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.LinkedList;
 
+import javax.management.RuntimeErrorException;
+
 import broker.DBBroker;
 import communication.Operation;
 import communication.Request;
@@ -16,6 +18,7 @@ import communication.Response;
 import communication.Transceiver;
 import model.Putovanje;
 import model.User;
+import model.Zemlja;
 
 
 public class ServerHandler extends Thread {
@@ -154,12 +157,14 @@ public class ServerHandler extends Thread {
 			
 			case Operation.UPDATE_PUTOVANJE: {
 				Putovanje put = (Putovanje) request.getArg();
+				if (validateNoOverlap(put)) throw new RuntimeException("Another putovanje already exists in the same counry and period");
 				broker.updatePutovanje(put);
 				break;
 			}
 			
 			case Operation.INSERT_PUTOVANJE: {
 				Putovanje put = (Putovanje) request.getArg();
+				if (validateNoOverlap(put)) throw new RuntimeException("Another putovanje already exists in the same counry and period");
 				broker.insertPutovanje(put);
 				break;
 			}
@@ -180,7 +185,7 @@ public class ServerHandler extends Thread {
 				
 				User newUser = addUserNoRegister(put.getPutnik().getIme(), put.getPutnik().getPrezime(), put.getPutnik().getJmbg(), put.getPutnik().getBroj_pasosa(), put.getPutnik().getDatum_rodjenja());        
 				put.setPutnik(newUser);
-				
+				if (validateNoOverlap(put)) throw new RuntimeException("Another putovanje already exists in the same counry and period");
 				broker.insertPutovanje(put);
 				break;
 			}
@@ -232,5 +237,44 @@ public class ServerHandler extends Thread {
 		return user;
 	}
 	
+	private boolean validateNoOverlap(Putovanje newPutovanje) {
+	    boolean ret = false;
+		User user = newPutovanje.getPutnik();
+	    LinkedList<Putovanje> existingPutovanja;
+
+	    if (user.getId() == Integer.MIN_VALUE) {
+	        existingPutovanja = broker.getPutovanja(user.getJmbg(), user.getBroj_pasosa());
+	    } else {
+	        existingPutovanja = broker.getPutovanja(user.getId());
+	    }
+	    LocalDate newStart = newPutovanje.getDatum_ulaska();
+	    LocalDate newEnd = newPutovanje.getDatum_izlaska();
+
+	    for (Putovanje existing : existingPutovanja) {
+	        // preskakanje istog putovanja ako je UPDATE_PUTOVANJE
+	        if (existing.getId() == newPutovanje.getId()) continue;
+
+	        boolean sharesCountry = false;
+
+	        for (Zemlja z1 : newPutovanje.getZemlja()) {
+	            for (Zemlja z2 : existing.getZemlja()) {
+	                if (z1.getId() == z2.getId()) {
+	                    sharesCountry = true;
+	                    break;
+	                }
+	            }
+	            if (sharesCountry) break;
+	        }
+
+	        // Only check dates if they share at least one country
+	        if (sharesCountry) {
+	            LocalDate existingStart = existing.getDatum_ulaska();
+	            LocalDate existingEnd = existing.getDatum_izlaska();
+	            ret = newEnd.isAfter(existingStart) || newStart.isBefore(existingEnd);
+	        }
+	    }
+	    return ret;
+	}
+
 	
 }
